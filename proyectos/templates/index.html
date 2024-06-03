@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Iniciativas Estudiantiles</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .full-height {
+            height: 100vh;
+        }
+        .hero {
+            background-image: url('./images/svm.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-top: 56px; /* Height of the fixed navbar */
+        }
+        .section {
+            padding: 50px 0;
+        }
+        .login-section {
+            background-color: #0056b3;
+            color: white;
+            padding: 50px 0;
+        }
+        .login-box, .register-box {
+            background-color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            height: 500px;
+            color: black;
+        }
+        .navbar-brand img {
+            height: 40px; /* Adjust the height as needed */
+            width: auto;
+        }
+        .navbar {
+            background-color: #0056b3; /* Blue background color */
+        }
+        .navbar-nav .nav-link {
+            color: white !important; /* White text color */
+        }
+        @media (max-width: 767px) {
+            .login-box, .register-box {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <a class="navbar-brand" href="#">
+            <img src="./images/BarraColores.png" alt="Logo"> PIE USM SVM
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#hero">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#portfolio">Proyectos</a>
+                </li>
+                <!-- Condicionamos lo que aparece en el nav dependiendo si el usuario está o no autenticado -->
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="?logout=true" class="nav-link">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#login">Iniciar Sesión</a>
+                </li>
+                {% endif %}
+                
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="hero full-height">
+        <div class="container">
+            <h1>Portal de Iniciativas Estudiantiles</h1>
+            <p>Universidad Santa María - Sede Viña del Mar</p>
+            <a href="#portfolio" class="btn btn-warning mt-4">Ver Proyectos</a>
+        </div>
+    </header>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="section text-center">
+        <div class="container">
+            <h2>PORTAFOLIO</h2>
+            <h3>Proyectos Presentados</h3>
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre Proyecto</th>
+                            <th>Estudiante</th>
+                            <th>Tema</th>
+                            <th>Profesor</th>
+                            <th><button class="btn btn-primary">Todos los Temas</button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for proyecto in proyectos %}
+                        <tr>
+                            <td>{{ proyecto.titulo }}</td>
+                            <td>{{ proyecto.estudiante.username }}</td>
+                            <td>{{ proyecto.tema }}</td>
+                            <td>{{ proyecto.profesor.username }}</td> 
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- Login and Register Section -->
+    <section id="login" class="login-section text-center">
+        <div class="container">
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-5">
+                    <h2>Iniciar Sesión</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum lorem purus, viverra ut sapien vel, bibendum tincidunt est. Suspendisse suscipit ullamcorper dui.</p>
+                    <div class="login-box">
+                        <h3>Iniciar Sesión</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Ingresa tu email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Ingresa tu password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <h2>Registrarse</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum lorem purus, viverra ut sapien vel, bibendum tincidunt est. Suspendisse suscipit ullamcorper dui.</p>
+                    <div class="register-box">
+                        <h3>Registrarse</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="register-name">Nombre</label>
+                                <input type="text" name="register-name" class="form-control" id="register-name" placeholder="Ingresa tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-email">Email</label>
+                                <input type="email" name="register-email" class="form-control" id="register-email" placeholder="Ingresa tu email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-password">Password</label>
+                                <input type="password" name="register-password" class="form-control" id="register-password" placeholder="Ingresa tu contraseña" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-password2">Repite tu Password</label>
+                                <input type="password" name="register-password2" class="form-control" id="register-password2" placeholder="Repite tu contraseña" required>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="is-professor" name="is-professor">
+                                <label class="form-check-label" for="is-professor">¿Eres profesor?</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
